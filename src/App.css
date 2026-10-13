@@ -1,0 +1,22 @@
+.sector {
+  width: 80%;
+
+  margin-top: 5%;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-evenly;
+}
+
+.poster {
+  width: 20%;
+  text-align: center;
+}
+
+.poster img {
+    width: 100%;
+}
