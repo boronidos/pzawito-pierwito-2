@@ -322,7 +322,7 @@ function Album(props: any) {
             <div className="mt-auto w-100">
               {isEmpty ? (
                 <div className="alert alert-warning py-1 px-2 mb-0 text-center small" role="alert">
-                  Brak utworów w albumie!
+                  No Songs
                 </div>
               ) : (
                 <div style={{ maxHeight: "120px", overflowY: "auto" }}>
@@ -348,7 +348,7 @@ function Song(props: any) {
   return (
     <tr>
       <td>{name} {artist}</td>
-      <td className="text-end">{duration || "3:00"}</td>
+      <td className="text-end">{duration}</td>
     </tr>
   );
 }
