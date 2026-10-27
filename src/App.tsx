@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import "./bootstrap.min.css";
 
 function App() {
@@ -117,110 +117,74 @@ function App() {
   const albumWithMaxNumOfSongs =
     albums.length > 0
       ? albums.reduce((max, album) =>
-          album.songs.length > max.songs.length ? album : max,
-        )
+        album.songs.length > max.songs.length ? album : max,
+      )
       : null;
 
   const [isOpenMovies, setIsOpenMovies] = useState(true);
   const [isOpenBooks, setIsOpenBooks] = useState(true);
   const [isOpenAlbums, setIsOpenAlbums] = useState(true);
 
+  const [moviesSearch, setMoviesSearch] = useState(String);
+  const [moviesFound, setMoviesFound] = useState(false);
+
   return (
     <div className="container py-4">
       <div className="mb-5">
-        <h1 onClick={() => setIsOpenMovies(prev => !prev)} style={{ cursor: "pointer" }}>Movies {isOpenMovies ? "⏷" : "⏵"}</h1>
 
+        <h1 onClick={() => setIsOpenMovies(prev => !prev)} style={{ cursor: "pointer" }}>Movies {isOpenMovies ? "⏷" : "⏵"}</h1>
         {isOpenMovies && (
           <>
-            <div className="mb-4">
-              <h2>All Movies</h2>
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                {sortedMovies.map((movie: any, idx) => (
-                  <div className="col " key={idx}>
-                    <Movie
-                      name={movie.name}
-                      image={movie.image}
-                      date={movie.date}
-                      rating={movie.rating}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Section title="All Movies">
+              <input type="text" className="form-control w-100" placeholder="Search..." id="movies-search" onChange={(e) => setMoviesSearch(e.target.value)} />
+              <p className="w-100"> {moviesSearch.length > 0 ? "Searching: " : ""} {moviesSearch}</p>
+              {sortedMovies.map((movie: any) => movie.name.toLowerCase().includes(moviesSearch) && (
+                <div className="col">
+                  <Movie name={movie.name} image={movie.image} date={movie.date} rating={movie.rating}/>
+                </div>
+              )
+              )}
+            </Section>
 
-            <div className="mb-4">
-              <h2>Movies Released After 2010</h2>
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                {filteredMoviesByDate.map((movie: any, idx) => (
-                  <div className="col" key={idx}>
-                    <Movie
-                      name={movie.name}
-                      image={movie.image}
-                      date={movie.date}
-                      rating={movie.rating}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Section title="Movies Released After 2010" >
+              {filteredMoviesByDate.map((movie: any) => (
+                <div className="col">
+                  <Movie name={movie.name} image={movie.image} date={movie.date} rating={movie.rating} />
+                </div>
+              ))}
+            </Section>
 
-            <div className="mb-4">
-              <h2>Movies With Rating Higher Than 9</h2>
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                {filteredMoviesByRating.map((movie: any, idx) => (
-                  <div className="col" key={idx}>
-                    <Movie
-                      name={movie.name}
-                      image={movie.image}
-                      date={movie.date}
-                      rating={movie.rating}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Section title="Movies With Rating Higher Than 9">
+              {filteredMoviesByRating.map((movie: any) => (
+                <div className="col">
+                  <Movie name={movie.name} image={movie.image} date={movie.date} rating={movie.rating} />
+                </div>
+              ))}
+            </Section>
           </>
         )}
       </div>
 
       <div className="mb-5">
-        <h1 onClick={() => setIsOpenBooks(prev => !prev)} style={{ cursor: "pointer" }}>Books {isOpenBooks ? "⏷" : "⏵"}</h1>
 
+        <h1 onClick={() => setIsOpenBooks(prev => !prev)} style={{ cursor: "pointer" }}>Books {isOpenBooks ? "⏷" : "⏵"}</h1>
         {isOpenBooks && (
           <>
-            <div className="mb-4">
-              <h2>All Books</h2>
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                {sortedBooks.map((book: any, idx) => (
-                  <div className="col" key={idx}>
-                    <Book
-                      name={book.name}
-                      image={book.image}
-                      date={book.date}
-                      author={book.author}
-                      pageCount={book.pageCount}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Section title="All Books">
+              {sortedBooks.map((book: any) => (
+                <div className="col">
+                  <Book name={book.name} image={book.image} date={book.date} author={book.author} pageCount={book.pageCount} />
+                </div>
+              ))}
+            </Section>
 
-            <div className="mb-4">
-              <h2>Books Sorted By Release Year</h2>
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                {sortedBooksByDate.map((book: any, idx) => (
-                  <div className="col" key={idx}>
-                    <Book
-                      name={book.name}
-                      image={book.image}
-                      date={book.date}
-                      author={book.author}
-                      pageCount={book.pageCount}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Section title="Books Sorted By Release Year">
+              {sortedBooksByDate.map((book: any) => (
+                <div className="col">
+                  <Book name={book.name} image={book.image} date={book.date} author={book.author} pageCount={book.pageCount} />
+                </div>
+              ))}
+            </Section>
           </>
         )}
       </div>
@@ -230,41 +194,22 @@ function App() {
 
         {isOpenAlbums && (
           <>
-            <div className="mb-4">
-              <h2>All Albums</h2>
-              <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                {sortedAlbums.map((album: any, idx) => (
-                  <div className="col" key={idx}>
-                    <Album
-                      name={album.name}
-                      image={album.image}
-                      songs={album.songs}
-                      author={album.author}
-                      genre={album.genre}
-                      date={album.date}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Section title="All Albums">
+              {sortedAlbums.map((album: any) => (
+                <div className="col">
+                  <Album name={album.name} image={album.image} songs={album.songs} author={album.author} genre={album.genre} date={album.date} />
+                </div>
+              ))}
+            </Section>
 
-            <div className="mb-4">
-              <h2>Album With Most Songs</h2>
-              <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                {albumWithMaxNumOfSongs && (
-                  <div className="col">
-                    <Album
-                      name={albumWithMaxNumOfSongs.name}
-                      image={albumWithMaxNumOfSongs.image}
-                      songs={albumWithMaxNumOfSongs.songs}
-                      author={albumWithMaxNumOfSongs.author}
-                      genre={albumWithMaxNumOfSongs.genre}
-                      date={albumWithMaxNumOfSongs.date}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
+
+            <Section title="Album With Most Songs">
+              {albumWithMaxNumOfSongs && (
+                <div className="col">
+                  <Album name={albumWithMaxNumOfSongs.name} image={albumWithMaxNumOfSongs.image} songs={albumWithMaxNumOfSongs.songs} author={albumWithMaxNumOfSongs.author} genre={albumWithMaxNumOfSongs.genre} date={albumWithMaxNumOfSongs.date} />
+                </div>
+              )}
+            </Section>
           </>
         )}
       </div>
@@ -272,17 +217,41 @@ function App() {
   );
 }
 
+interface SectionProps {
+  title: string,
+  children: ReactNode
+}
+
+function Section({title, children} : SectionProps) {
+  return (
+    <div className="mb-4">
+      <h2>{title}</h2>
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {children}
+      </div>
+    </div>
+  )
+}
+
+function movieClick(detail : boolean, name: string) {
+  if (detail) {
+    console.log("Pokaż szczegóły dla " + name)
+  }
+  else {
+    console.log("Wybrano film " + name)
+  }
+}
+
 function Movie(props: any) {
   const { name, image, date, rating } = props;
   const isRecommended = rating >= 8;
   return (
-    <div className={`card h-100 bg-light text-dark ${isRecommended ? "border border-success border-2" : ""}`} style={{ width: "10rem" }}>
-      <img src={image} alt={name} className="card-img-top" style={{ height: "100%" }} />
+    <div className={`card h-100 bg-light text-dark ${isRecommended ? "border border-success border-2" : ""}`} onClick={() => movieClick(false, name)}>
+      <img src={image} alt={name} className="card-img-top"/>
       <div className="card-body d-flex flex-column justify-content-between">
         <p className="card-title fw-bold mb-1">{name}</p>
-        <p className="card-text text-secondary mb-0">
-          {date} ({rating}/10)
-        </p>
+        <p className="card-text text-secondary mb-0">{date} ({rating}/10)</p>
+        <button className="btn btn-primary mt-3 btn-sm" onClick={e => {e.stopPropagation(); movieClick(true, name); }}>Show Details</button>
       </div>
     </div>
   );
@@ -292,16 +261,18 @@ function Book(props: any) {
   const { name, image, date, author, pageCount } = props;
   const isAncient = date <= 2000;
   return (
-    <div className={`card h-100 bg-light text-dark ${isAncient ? "border border-warning border-2" : ""}`} style={{ width: "10rem" }}>
-      <img src={image} alt={name} className="card-img-top object-fit-cover" style={{ height: "100%" }} />
+    <div className={`card h-100 bg-light text-dark ${isAncient ? "border border-warning border-2" : ""}`}>
+      <img src={image} alt={name} className="card-img-top object-fit-cover"/>
       <div className="card-body d-flex flex-column justify-content-between">
         <p className="card-title fw-bold mb-1">{name}</p>
-        <p className="card-text text-secondary small mb-0">
-          {author} {date} ({pageCount} pages)
-        </p>
+        <p className="card-text text-secondary small mb-0">{author} {date} ({pageCount} pages)</p>
       </div>
     </div>
   );
+}
+
+function songClick(name : string, albumName : string) {
+  console.log("Chose song: " + name + " from " + albumName);
 }
 
 function Album(props: any) {
@@ -311,7 +282,7 @@ function Album(props: any) {
     <div className={`card h-100 bg-light text-dark ${isEmpty ? "border border-danger border-2" : ""}`}>
       <div className="row g-0 h-100">
         <div className="col-4">
-          <img src={image} alt={name} className="img-fluid h-100 rounded-start object-fit-cover" style={{width: "100%"}} />
+          <img src={image} alt={name} className="img-fluid h-100 rounded-start object-fit-cover"/>
         </div>
         <div className="col-8">
           <div className="card-body d-flex flex-column h-100 p-2">
@@ -328,8 +299,8 @@ function Album(props: any) {
                 <div style={{ maxHeight: "120px", overflowY: "auto" }}>
                   <table className="table table-light table-striped table-hover table-sm mb-0">
                     <tbody>
-                      {songs.map((song: any, idx: number) => (
-                        <Song key={idx} name={song.name} artist={song.artist} duration={song.duration} />
+                      {songs.map((song: any) => (
+                        <Song name={song.name} artist={song.artist} duration={song.duration} albumName={name} />
                       ))}
                     </tbody>
                   </table>
@@ -344,9 +315,9 @@ function Album(props: any) {
 }
 
 function Song(props: any) {
-  const { name, artist, duration } = props;
+  const { name, artist, duration, albumName } = props;
   return (
-    <tr>
+    <tr onClick={() => songClick(name, albumName)}>
       <td>{name} {artist}</td>
       <td className="text-end">{duration}</td>
     </tr>
