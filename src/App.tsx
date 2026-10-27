@@ -117,8 +117,8 @@ function App() {
   const albumWithMaxNumOfSongs =
     albums.length > 0
       ? albums.reduce((max, album) =>
-        album.songs.length > max.songs.length ? album : max,
-      )
+          album.songs.length > max.songs.length ? album : max,
+        )
       : null;
 
   const [isOpenMovies, setIsOpenMovies] = useState(true);
@@ -126,30 +126,56 @@ function App() {
   const [isOpenAlbums, setIsOpenAlbums] = useState(true);
 
   const [moviesSearch, setMoviesSearch] = useState(String);
-  const [moviesFound, setMoviesFound] = useState(false);
+
+  const filteredMovies = sortedMovies.filter((movie) =>
+    movie.name.toLowerCase().includes(moviesSearch.toLowerCase()),
+  );
 
   return (
     <div className="container py-4">
       <div className="mb-5">
-
-        <h1 onClick={() => setIsOpenMovies(prev => !prev)} style={{ cursor: "pointer" }}>Movies {isOpenMovies ? "⏷" : "⏵"}</h1>
+        <h1
+          onClick={() => setIsOpenMovies((prev) => !prev)}
+          style={{ cursor: "pointer" }}
+        >
+          Movies {isOpenMovies ? "⏷" : "⏵"}
+        </h1>
         {isOpenMovies && (
           <>
             <Section title="All Movies">
-              <input type="text" className="form-control w-100" placeholder="Search..." id="movies-search" onChange={(e) => setMoviesSearch(e.target.value)} />
+              <input
+                type="text"
+                className="form-control w-100"
+                placeholder="Search..."
+                id="movies-search"
+                onChange={(e) => setMoviesSearch(e.target.value)}
+              />
               <p className="w-100"> {moviesSearch.length > 0 ? "Searching: " : ""} {moviesSearch}</p>
-              {sortedMovies.map((movie: any) => movie.name.toLowerCase().includes(moviesSearch) && (
-                <div className="col">
-                  <Movie name={movie.name} image={movie.image} date={movie.date} rating={movie.rating}/>
-                </div>
-              )
-              )}
+              {(filteredMovies.length > 0 ? (
+                  filteredMovies.map((movie : any) => (
+                    <div className="col">
+                      <Movie
+                        name={movie.name}
+                        image={movie.image}
+                        date={movie.date}
+                        rating={movie.rating}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p>No Movies Found</p>
+                ))}
             </Section>
 
-            <Section title="Movies Released After 2010" >
+            <Section title="Movies Released After 2010">
               {filteredMoviesByDate.map((movie: any) => (
                 <div className="col">
-                  <Movie name={movie.name} image={movie.image} date={movie.date} rating={movie.rating} />
+                  <Movie
+                    name={movie.name}
+                    image={movie.image}
+                    date={movie.date}
+                    rating={movie.rating}
+                  />
                 </div>
               ))}
             </Section>
@@ -157,7 +183,12 @@ function App() {
             <Section title="Movies With Rating Higher Than 9">
               {filteredMoviesByRating.map((movie: any) => (
                 <div className="col">
-                  <Movie name={movie.name} image={movie.image} date={movie.date} rating={movie.rating} />
+                  <Movie
+                    name={movie.name}
+                    image={movie.image}
+                    date={movie.date}
+                    rating={movie.rating}
+                  />
                 </div>
               ))}
             </Section>
@@ -166,14 +197,24 @@ function App() {
       </div>
 
       <div className="mb-5">
-
-        <h1 onClick={() => setIsOpenBooks(prev => !prev)} style={{ cursor: "pointer" }}>Books {isOpenBooks ? "⏷" : "⏵"}</h1>
+        <h1
+          onClick={() => setIsOpenBooks((prev) => !prev)}
+          style={{ cursor: "pointer" }}
+        >
+          Books {isOpenBooks ? "⏷" : "⏵"}
+        </h1>
         {isOpenBooks && (
           <>
             <Section title="All Books">
               {sortedBooks.map((book: any) => (
                 <div className="col">
-                  <Book name={book.name} image={book.image} date={book.date} author={book.author} pageCount={book.pageCount} />
+                  <Book
+                    name={book.name}
+                    image={book.image}
+                    date={book.date}
+                    author={book.author}
+                    pageCount={book.pageCount}
+                  />
                 </div>
               ))}
             </Section>
@@ -181,7 +222,13 @@ function App() {
             <Section title="Books Sorted By Release Year">
               {sortedBooksByDate.map((book: any) => (
                 <div className="col">
-                  <Book name={book.name} image={book.image} date={book.date} author={book.author} pageCount={book.pageCount} />
+                  <Book
+                    name={book.name}
+                    image={book.image}
+                    date={book.date}
+                    author={book.author}
+                    pageCount={book.pageCount}
+                  />
                 </div>
               ))}
             </Section>
@@ -190,23 +237,41 @@ function App() {
       </div>
 
       <div className="mb-5">
-        <h1 onClick={() => setIsOpenAlbums(prev => !prev)} style={{ cursor: "pointer" }}>Albums {isOpenAlbums ? "⏷" : "⏵"}</h1>
+        <h1
+          onClick={() => setIsOpenAlbums((prev) => !prev)}
+          style={{ cursor: "pointer" }}
+        >
+          Albums {isOpenAlbums ? "⏷" : "⏵"}
+        </h1>
 
         {isOpenAlbums && (
           <>
             <Section title="All Albums">
               {sortedAlbums.map((album: any) => (
                 <div className="col">
-                  <Album name={album.name} image={album.image} songs={album.songs} author={album.author} genre={album.genre} date={album.date} />
+                  <Album
+                    name={album.name}
+                    image={album.image}
+                    songs={album.songs}
+                    author={album.author}
+                    genre={album.genre}
+                    date={album.date}
+                  />
                 </div>
               ))}
             </Section>
 
-
             <Section title="Album With Most Songs">
               {albumWithMaxNumOfSongs && (
                 <div className="col">
-                  <Album name={albumWithMaxNumOfSongs.name} image={albumWithMaxNumOfSongs.image} songs={albumWithMaxNumOfSongs.songs} author={albumWithMaxNumOfSongs.author} genre={albumWithMaxNumOfSongs.genre} date={albumWithMaxNumOfSongs.date} />
+                  <Album
+                    name={albumWithMaxNumOfSongs.name}
+                    image={albumWithMaxNumOfSongs.image}
+                    songs={albumWithMaxNumOfSongs.songs}
+                    author={albumWithMaxNumOfSongs.author}
+                    genre={albumWithMaxNumOfSongs.genre}
+                    date={albumWithMaxNumOfSongs.date}
+                  />
                 </div>
               )}
             </Section>
@@ -218,11 +283,11 @@ function App() {
 }
 
 interface SectionProps {
-  title: string,
-  children: ReactNode
+  title: string;
+  children: ReactNode;
 }
 
-function Section({title, children} : SectionProps) {
+function Section({ title, children }: SectionProps) {
   return (
     <div className="mb-4">
       <h2>{title}</h2>
@@ -230,15 +295,14 @@ function Section({title, children} : SectionProps) {
         {children}
       </div>
     </div>
-  )
+  );
 }
 
-function movieClick(detail : boolean, name: string) {
+function movieClick(detail: boolean, name: string) {
   if (detail) {
-    console.log("Pokaż szczegóły dla " + name)
-  }
-  else {
-    console.log("Wybrano film " + name)
+    console.log("Pokaż szczegóły dla " + name);
+  } else {
+    console.log("Wybrano film " + name);
   }
 }
 
@@ -246,12 +310,25 @@ function Movie(props: any) {
   const { name, image, date, rating } = props;
   const isRecommended = rating >= 8;
   return (
-    <div className={`card h-100 bg-light text-dark ${isRecommended ? "border border-success border-2" : ""}`} onClick={() => movieClick(false, name)}>
-      <img src={image} alt={name} className="card-img-top"/>
+    <div
+      className={`card h-100 bg-light text-dark ${isRecommended ? "border border-success border-2" : ""}`}
+      onClick={() => movieClick(false, name)}
+    >
+      <img src={image} alt={name} className="card-img-top" />
       <div className="card-body d-flex flex-column justify-content-between">
         <p className="card-title fw-bold mb-1">{name}</p>
-        <p className="card-text text-secondary mb-0">{date} ({rating}/10)</p>
-        <button className="btn btn-primary mt-3 btn-sm" onClick={e => {e.stopPropagation(); movieClick(true, name); }}>Show Details</button>
+        <p className="card-text text-secondary mb-0">
+          {date} ({rating}/10)
+        </p>
+        <button
+          className="btn btn-primary mt-3 btn-sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            movieClick(true, name);
+          }}
+        >
+          Show Details
+        </button>
       </div>
     </div>
   );
@@ -261,17 +338,21 @@ function Book(props: any) {
   const { name, image, date, author, pageCount } = props;
   const isAncient = date <= 2000;
   return (
-    <div className={`card h-100 bg-light text-dark ${isAncient ? "border border-warning border-2" : ""}`}>
-      <img src={image} alt={name} className="card-img-top object-fit-cover"/>
+    <div
+      className={`card h-100 bg-light text-dark ${isAncient ? "border border-warning border-2" : ""}`}
+    >
+      <img src={image} alt={name} className="card-img-top object-fit-cover" />
       <div className="card-body d-flex flex-column justify-content-between">
         <p className="card-title fw-bold mb-1">{name}</p>
-        <p className="card-text text-secondary small mb-0">{author} {date} ({pageCount} pages)</p>
+        <p className="card-text text-secondary small mb-0">
+          {author} {date} ({pageCount} pages)
+        </p>
       </div>
     </div>
   );
 }
 
-function songClick(name : string, albumName : string) {
+function songClick(name: string, albumName: string) {
   console.log("Chose song: " + name + " from " + albumName);
 }
 
@@ -279,10 +360,16 @@ function Album(props: any) {
   const { name, image, author, genre, date, songs } = props;
   const isEmpty = songs.length === 0;
   return (
-    <div className={`card h-100 bg-light text-dark ${isEmpty ? "border border-danger border-2" : ""}`}>
+    <div
+      className={`card h-100 bg-light text-dark ${isEmpty ? "border border-danger border-2" : ""}`}
+    >
       <div className="row g-0 h-100">
         <div className="col-4">
-          <img src={image} alt={name} className="img-fluid h-100 rounded-start object-fit-cover"/>
+          <img
+            src={image}
+            alt={name}
+            className="img-fluid h-100 rounded-start object-fit-cover"
+          />
         </div>
         <div className="col-8">
           <div className="card-body d-flex flex-column h-100 p-2">
@@ -292,7 +379,10 @@ function Album(props: any) {
 
             <div className="mt-auto w-100">
               {isEmpty ? (
-                <div className="alert alert-warning py-1 px-2 mb-0 text-center small" role="alert">
+                <div
+                  className="alert alert-warning py-1 px-2 mb-0 text-center small"
+                  role="alert"
+                >
                   No Songs
                 </div>
               ) : (
@@ -300,7 +390,12 @@ function Album(props: any) {
                   <table className="table table-light table-striped table-hover table-sm mb-0">
                     <tbody>
                       {songs.map((song: any) => (
-                        <Song name={song.name} artist={song.artist} duration={song.duration} albumName={name} />
+                        <Song
+                          name={song.name}
+                          artist={song.artist}
+                          duration={song.duration}
+                          albumName={name}
+                        />
                       ))}
                     </tbody>
                   </table>
@@ -318,7 +413,9 @@ function Song(props: any) {
   const { name, artist, duration, albumName } = props;
   return (
     <tr onClick={() => songClick(name, albumName)}>
-      <td>{name} {artist}</td>
+      <td>
+        {name} {artist}
+      </td>
       <td className="text-end">{duration}</td>
     </tr>
   );
