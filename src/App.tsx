@@ -152,7 +152,7 @@ function App() {
               />
               <p className="w-100"> {moviesSearch.length > 0 ? "Searching: " : ""} {moviesSearch}</p>
               {(filteredMovies.length > 0 ? (
-                  filteredMovies.map((movie : any) => (
+                  filteredMovies.map((movie : MovieProps) => (
                     <div className="col">
                       <Movie
                         name={movie.name}
@@ -168,7 +168,7 @@ function App() {
             </Section>
 
             <Section title="Movies Released After 2010">
-              {filteredMoviesByDate.map((movie: any) => (
+              {filteredMoviesByDate.map((movie: MovieProps) => (
                 <div className="col">
                   <Movie
                     name={movie.name}
@@ -181,7 +181,7 @@ function App() {
             </Section>
 
             <Section title="Movies With Rating Higher Than 9">
-              {filteredMoviesByRating.map((movie: any) => (
+              {filteredMoviesByRating.map((movie: MovieProps) => (
                 <div className="col">
                   <Movie
                     name={movie.name}
@@ -206,7 +206,7 @@ function App() {
         {isOpenBooks && (
           <>
             <Section title="All Books">
-              {sortedBooks.map((book: any) => (
+              {sortedBooks.map((book: BookProps) => (
                 <div className="col">
                   <Book
                     name={book.name}
@@ -220,7 +220,7 @@ function App() {
             </Section>
 
             <Section title="Books Sorted By Release Year">
-              {sortedBooksByDate.map((book: any) => (
+              {sortedBooksByDate.map((book: BookProps) => (
                 <div className="col">
                   <Book
                     name={book.name}
@@ -247,9 +247,10 @@ function App() {
         {isOpenAlbums && (
           <>
             <Section title="All Albums">
-              {sortedAlbums.map((album: any) => (
+              {sortedAlbums.map((album: AlbumProps, i: number) => (
                 <div className="col">
                   <Album
+                    key={i}
                     name={album.name}
                     image={album.image}
                     songs={album.songs}
@@ -306,8 +307,14 @@ function movieClick(detail: boolean, name: string) {
   }
 }
 
-function Movie(props: any) {
-  const { name, image, date, rating } = props;
+interface MovieProps {
+  name: string;
+  image: string;
+  date: number;
+  rating: number;
+}
+
+function Movie({ name, image, date, rating }: MovieProps) {
   const isRecommended = rating >= 8;
   return (
     <div
@@ -334,8 +341,15 @@ function Movie(props: any) {
   );
 }
 
-function Book(props: any) {
-  const { name, image, date, author, pageCount } = props;
+interface BookProps {
+  name: string;
+  image: string;
+  date: number;
+  author: string;
+  pageCount: string;
+}
+
+function Book({ name, image, date, author, pageCount } : BookProps) {
   const isAncient = date <= 2000;
   return (
     <div
@@ -356,28 +370,28 @@ function songClick(name: string, albumName: string) {
   console.log("Chose song: " + name + " from " + albumName);
 }
 
-function Album(props: any) {
-  const { name, image, author, genre, date, songs } = props;
+interface AlbumProps {
+  name: string;
+  image: string;
+  author: string;
+  genre: string;
+  date: number;
+  songs: SongProps[];
+}
+
+function Album({ name, image, author, genre, date, songs } : AlbumProps) {
   const isEmpty = songs.length === 0;
   return (
+    <>
     <div
       className={`card h-100 bg-light text-dark ${isEmpty ? "border border-danger border-2" : ""}`}
     >
-      <div className="row g-0 h-100">
-        <div className="col-4">
-          <img
-            src={image}
-            alt={name}
-            className="img-fluid h-100 rounded-start object-fit-cover"
-          />
-        </div>
-        <div className="col-8">
-          <div className="card-body d-flex flex-column h-100 p-2">
-            <p className="fw-bold mb-1 small">
-              {name} {author} {genre} {date}
-            </p>
-
-            <div className="mt-auto w-100">
+      <img src={image} alt={name} className="card-img-top object-fit-cover" />
+      <div className="card-body d-flex flex-column justify-content-between">
+        <p className="card-title fw-bold mb-0">{name}</p>
+        <p className="card-title mb-1 fs-xsm">{author} - {genre} - {date}</p>
+        <div className="card-text text-secondary small mb-0">
+          <div className="mt-auto w-100">
               {isEmpty ? (
                 <div
                   className="alert alert-warning py-1 px-2 mb-0 text-center small"
@@ -386,10 +400,10 @@ function Album(props: any) {
                   No Songs
                 </div>
               ) : (
-                <div style={{ maxHeight: "120px", overflowY: "auto" }}>
+                <div>
                   <table className="table table-light table-striped table-hover table-sm mb-0">
                     <tbody>
-                      {songs.map((song: any) => (
+                      {songs.map((song: SongProps) => (
                         <Song
                           name={song.name}
                           artist={song.artist}
@@ -401,18 +415,24 @@ function Album(props: any) {
                   </table>
                 </div>
               )}
-            </div>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 }
 
-function Song(props: any) {
-  const { name, artist, duration, albumName } = props;
+interface SongProps {
+  name: string;
+  artist: string;
+  duration: string;
+  albumName?: string;
+}
+
+function Song({ name, artist, duration, albumName } : SongProps) {
   return (
-    <tr onClick={() => songClick(name, albumName)}>
+    <tr onClick={() => songClick(name, albumName ? albumName : "")}>
       <td>
         {name} {artist}
       </td>
